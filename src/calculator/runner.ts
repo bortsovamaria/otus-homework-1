@@ -1,33 +1,36 @@
-import {parser} from "./parser";
+import { parser } from "./parser";
 
-import {firstPrioritiesCalc, fourthPrioritiesCalc, secondPrioritiesCalc, thirdPrioritiesCalc} from "./engine";
+import {
+  firstPrioritiesCalc,
+  fourthPrioritiesCalc,
+  secondPrioritiesCalc,
+  thirdPrioritiesCalc,
+} from "./engine";
 
 export const runner = (line: string): number => {
+  const stack = parser(line);
 
-    const stack = parser(line);
+  if (stack === null) {
+    throw new TypeError("Unexpected string");
+  }
 
-    if (stack === null) {
-        throw new TypeError("Unexpected string");
-    }
+  const firstPrioritiesRes = firstPrioritiesCalc(stack);
 
-    const firstPrioritiesRes = firstPrioritiesCalc(stack);
+  if (firstPrioritiesRes.length === 1) {
+    return Number(firstPrioritiesRes[0]);
+  }
 
-    if (firstPrioritiesRes.length === 1) {
-        return Number(firstPrioritiesRes[0]);
-    }
+  const secondPrioritiesRes = secondPrioritiesCalc(firstPrioritiesRes);
 
-    const secondPrioritiesRes = secondPrioritiesCalc(firstPrioritiesRes);
+  if (secondPrioritiesRes.length === 1) {
+    return Number(secondPrioritiesRes[0]);
+  }
 
-    if (secondPrioritiesRes.length === 1) {
-        return Number(secondPrioritiesRes[0]);
-    }
+  const thirdPrioritiesRes = thirdPrioritiesCalc(firstPrioritiesRes);
 
-    const thirdPrioritiesRes = thirdPrioritiesCalc(firstPrioritiesRes);
+  if (thirdPrioritiesRes.length === 1) {
+    return Number(thirdPrioritiesRes[0]);
+  }
 
-    if (thirdPrioritiesRes.length === 1) {
-        return Number(thirdPrioritiesRes[0]);
-    }
-
-
-    return fourthPrioritiesCalc(thirdPrioritiesRes);
+  return fourthPrioritiesCalc(thirdPrioritiesRes);
 };
